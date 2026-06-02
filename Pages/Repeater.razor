@@ -1,60 +1,69 @@
 ﻿@page "/"
-
-
 @using System.Text
 @using Repetidor.Services
 @inject IRepetidorService RepetidorService
 @implements IDisposable
 
+<PageTitle>🔁 Repetidor de Frases</PageTitle>
 <h3>🔁 Repetidor de Frases</h3>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="mb-3">
-            <label>Frase:</label>
-            <input @bind="frase" class="form-control" />
+<div class="container">
+    <h3>🔁 Repetidor de Frases com Stream</h3>
+
+    <div class="form-grid">
+        <div class="input-group">
+            <label>📝 Frase:</label>
+            <input @bind="frase" placeholder="Digite uma frase..." />
         </div>
-        <div class="mb-3">
-            <label>Número de repetições:</label>
-            <input type="number" @bind="vezes" min="1" max="5000" class="form-control" />
+        <div class="input-group">
+            <label>🔢 Número de repetições:</label>
+            <input type="number" @bind="vezes" min="1" max="5000" />
         </div>
-        <div class="mb-3">
-            <label>Separador:</label>
-            <select @bind="separador" class="form-select">
+        <div class="input-group">
+            <label>➗ Separador:</label>
+            <select @bind="separador">
                 <option value="\n">Nova linha</option>
                 <option value=", ">Vírgula + espaço</option>
                 <option value=" ">Espaço</option>
                 <option value=";">Ponto e vírgula</option>
             </select>
         </div>
-        <div class="form-check mb-3">
-            <input type="checkbox" @bind="numerar" class="form-check-input" />
-            <label class="form-check-label">Numerar linhas</label>
+        <div class="input-group checkbox-group">
+            <input type="checkbox" @bind="numerar" />
+            <label>🔢 Numerar linhas</label>
         </div>
-        <button class="btn btn-primary" @onclick="GerarAsync" disabled="@gerando">
-            @(gerando ? "Gerando..." : "Repetir")
-        </button>
-        <button class="btn btn-secondary ms-2" @onclick="Limpar">Limpar</button>
     </div>
-    <div class="col-md-6">
-        @if (gerando)
-        {
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Carregando...</span>
-            </div>
-            <span> Gerando @vezes repetições (streaming ativo) </span>
-        }
-        <div class="border p-3 mt-2" style="max-height: 400px; overflow-y: auto;">
-            <pre>@resultadoParcial</pre>
+
+    <div class="button-group">
+        <button class="btn btn-primary" @onclick="GerarAsync" disabled="@gerando">
+            @(gerando ? "⏳ Gerando..." : "🚀 Repetir")
+        </button>
+        <button class="btn btn-secondary" @onclick="Limpar">🗑️ Limpar</button>
+    </div>
+
+    <div class="result-area">
+        <div class="result-header">
+            @if (!string.IsNullOrEmpty(resultadoFinal))
+            {
+                <span class="badge">📏 Caracteres: @resultadoFinal.Length</span>
+            }
         </div>
-        @if (!string.IsNullOrEmpty(resultadoFinal))
-        {
-            <div class="mt-2">
-                <span class="badge bg-secondary">Caracteres: @resultadoFinal.Length</span>
-            </div>
-        }
+        <div class="output-box">
+            @if (gerando)
+            {
+                <div class="spinner-container">
+                    <div class="spinner"></div>
+                    <span>Gerando @vezes repetições (streaming ativo)...</span>
+                </div>
+            }
+            else
+            {
+                <pre>@resultadoParcial</pre>
+            }
+        </div>
     </div>
 </div>
+
 
 @code {
    
