@@ -1,9 +1,9 @@
 # 🔁 Repetidor de Frases com Streaming
 
 [![Blazor WebAssembly](https://img.shields.io/badge/Blazor-WebAssembly-512BD4?logo=blazor&logoColor=white)](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor)
-[![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![GitHub last commit](https://img.shields.io/github/last-commit/seu-usuario/RepetidorFrases)](https://github.com/seu-usuario/RepetidorFrases)
+[![GitHub last commit](https://img.shields.io/github/last-commit/christianocj/phrase-repeater-blazorwasm)](https://github.com/christianocj/phrase-repeater-blazorwasm)
 
 Uma aplicação **Blazor WebAssembly** que repete uma frase N vezes com suporte a **streaming para grandes volumes** (N > 500), evitando congelamento da interface. Inclui histórico local, exportação de arquivo `.txt` e cópia para área de transferência.
 
