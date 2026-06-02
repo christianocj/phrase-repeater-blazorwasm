@@ -3,6 +3,7 @@
 @using Repetidor.Services
 @inject IRepetidorService RepetidorService
 @implements IDisposable
+@inject IJSRuntime JS
 
 <PageTitle>🔁 Repetidor de Frases</PageTitle>
 <h3>🔁 Repetidor de Frases</h3>
@@ -62,6 +63,25 @@
             }
         </div>
     </div>
+    @if (historico.Any())
+    {
+        <div class="history-section">
+            <div class="history-title">
+                📜 Últimos 5 usos (clique para recarregar)
+            </div>
+            <div class="history-list">
+                @foreach (var item in historico)
+                {
+                    <div class="history-item" @onclick="() => CarregarDoHistorico(item)">
+                        <strong>@item.Frase</strong> – @item.Vezes vez(es)
+                        <div class="history-meta">
+                            @(item.Numerar ? "Numerado" : "Não numerado") · Separador: @item.Separador
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
 </div>
 
 

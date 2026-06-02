@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Microsoft.JSInterop;
+using System.Text;
 
 namespace Repetidor.Pages
 {
@@ -12,6 +13,8 @@ namespace Repetidor.Pages
         private string resultadoFinal = "";
         private bool gerando = false;
         private CancellationTokenSource? cts;
+
+        private List<HistoricoItem> historico = new();
 
         private async Task GerarAsync()
         {
@@ -34,6 +37,7 @@ namespace Repetidor.Pages
                 {
                     resultadoFinal = RepetidorService.GerarRepetido(frase, vezes, separador, numerar);
                     resultadoParcial = resultadoFinal;
+                    await SalvarNoHistorico();
                 }
                 else
                 {
@@ -46,6 +50,7 @@ namespace Repetidor.Pages
                     }
                     resultadoFinal = sb.ToString();
                     resultadoParcial = resultadoFinal;
+                    await SalvarNoHistorico();
                 }
             }
             catch (OperationCanceledException)
@@ -70,6 +75,69 @@ namespace Repetidor.Pages
             StateHasChanged();
         }
 
+        private class HistoricoItem
+        {
+            public string Frase { get; set; } = "";
+            public int Vezes { get; set; }
+            public string Separador { get; set; } = "\n";
+            public bool Numerar { get; set; }
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await CarregarHistorico();
+                StateHasChanged();
+            }
+        }
+
+        private async Task SalvarNoHistorico()
+        {
+            try
+            {
+                var novo = new HistoricoItem
+                {
+                    Frase = frase,
+                    Vezes = vezes,
+                    Separador = separador,
+                    Numerar = numerar
+                };
+                historico.Insert(0, novo);
+                if (historico.Count > 5) historico.RemoveAt(5);
+                var json = System.Text.Json.JsonSerializer.Serialize(historico);
+                await JS.InvokeVoidAsync("localStorage.setItem", "repeaterHistorico", json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao salvar histórico: {ex.Message}");
+            }
+        }
+
+        private async Task CarregarHistorico()
+        {
+            try
+            {
+                var json = await JS.InvokeAsync<string>("localStorage.getItem", "repeaterHistorico");
+                if (!string.IsNullOrEmpty(json))
+                {
+                    historico = System.Text.Json.JsonSerializer.Deserialize<List<HistoricoItem>>(json) ?? new();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao carregar histórico: {ex.Message}");
+            }
+        }
+
+        private void CarregarDoHistorico(HistoricoItem item)
+        {
+            frase = item.Frase;
+            vezes = item.Vezes;
+            separador = item.Separador;
+            numerar = item.Numerar;
+            StateHasChanged();
+        }
         public void Dispose() => cts?.Cancel();
     }
 }
