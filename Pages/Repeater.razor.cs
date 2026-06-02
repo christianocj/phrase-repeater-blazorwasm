@@ -138,6 +138,18 @@ namespace Repetidor.Pages
             numerar = item.Numerar;
             StateHasChanged();
         }
+        private async Task CopiarResultado()
+        {
+            if (string.IsNullOrEmpty(resultadoFinal)) return;
+            await JS.InvokeVoidAsync("navigator.clipboard.writeText", resultadoFinal);
+        }
+
+        private async Task ExportarTxt()
+        {
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes(resultadoFinal));
+            using var streamRef = new DotNetStreamReference(stream);
+            await JS.InvokeVoidAsync("downloadFileFromStream", "repetido.txt", streamRef);
+        }
         public void Dispose() => cts?.Cancel();
     }
 }

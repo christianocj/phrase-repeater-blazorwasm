@@ -44,6 +44,13 @@
 
     <div class="result-area">
         <div class="result-header">
+            <div class="action-buttons">
+                @if (!string.IsNullOrEmpty(resultadoFinal))
+                {
+                    <button class="btn btn-outline btn-sm" @onclick="CopiarResultado">📋 Copiar</button>
+                    <button class="btn btn-outline btn-sm" @onclick="ExportarTxt">💾 Exportar .txt</button>
+                }
+            </div>
             @if (!string.IsNullOrEmpty(resultadoFinal))
             {
                 <span class="badge">📏 Caracteres: @resultadoFinal.Length</span>
