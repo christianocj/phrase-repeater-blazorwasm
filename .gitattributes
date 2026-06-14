@@ -17,4 +17,20 @@
 
 # Keep frontend visible
 *.html linguist-detectable=true
-*.css linguist-detectable=true
+
+###############################################################################
+# Set default behavior to automatically normalize line endings.
+###############################################################################
+* text=auto
+
+###############################################################################
+# Linguist configuration
+
+# Main language
+*.cs linguist-language=C#
+
+# Prioritize C#
+*.cs linguist-language=C#
+
+# Razor counts as HTML instead of C#
+*.razor linguist-language=HTML
